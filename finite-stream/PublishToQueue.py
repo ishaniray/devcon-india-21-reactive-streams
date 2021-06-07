@@ -11,8 +11,8 @@ import time
 from datetime import datetime
 import itertools
 
-def publish_msg():
-    channel.basic_publish(exchange='', routing_key='processor', body='1000')
+def publish_msg(id):
+    channel.basic_publish(exchange='', routing_key='processor', body=id)
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print(str(current_time)+" - Published message to queue")
@@ -22,6 +22,8 @@ channel = connection.channel()
 
 while True:
     for _ in itertools.repeat(None, 10):
-        publish_msg()
+        publish_msg('1000')
+        publish_msg('1001')
+        publish_msg('1002')
     time.sleep(10)
 connection.close()
