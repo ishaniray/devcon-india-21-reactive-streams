@@ -1,9 +1,7 @@
 package com.cerner.devcon.hic.service;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -15,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import reactor.core.publisher.Mono;
 
-@EnableBinding(Sink.class)
 @Service
 public class MockHicSinkService {
 
@@ -25,7 +22,7 @@ public class MockHicSinkService {
 	@Autowired
 	private FetchInfoDAO fetchInfoDAO;
 
-	@StreamListener(Sink.INPUT)
+	@RabbitListener(queues = "${spring.cloud.stream.bindings.input.destination}", concurrency = "5")
 	public void sendFlux(String id) throws JsonProcessingException {
 		System.out.println("Item received from queue: " + id);
 

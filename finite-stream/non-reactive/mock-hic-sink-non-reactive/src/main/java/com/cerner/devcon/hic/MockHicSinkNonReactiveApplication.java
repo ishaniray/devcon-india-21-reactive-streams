@@ -1,14 +1,11 @@
 package com.cerner.devcon.hic;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.messaging.Sink;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +18,6 @@ import com.cerner.devcon.hic.dao.FetchInfoDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@EnableBinding(Sink.class)
 @SpringBootApplication
 public class MockHicSinkNonReactiveApplication {
 
@@ -43,7 +39,7 @@ public class MockHicSinkNonReactiveApplication {
 		return new RestTemplate();
 	}
 
-	@StreamListener(Sink.INPUT)
+	@RabbitListener(queues = "${spring.cloud.stream.bindings.input.destination}", concurrency = "5")
 	public void loggerSink(String id) throws JsonProcessingException {
 		logger.info("Received from processor queue: " + id);
 
