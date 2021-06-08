@@ -39,7 +39,7 @@ public class MockHicSinkNonReactiveApplication {
 		return new RestTemplate();
 	}
 
-	@RabbitListener(queues = "${spring.cloud.stream.bindings.input.destination}", concurrency = "5")
+	@RabbitListener(queues = "${application.rabbit.queue}", concurrency = "5")
 	public void loggerSink(String id) throws JsonProcessingException {
 		logger.info("Received from processor queue: " + id);
 
