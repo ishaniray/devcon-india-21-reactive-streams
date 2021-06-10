@@ -13,7 +13,8 @@ import io.r2dbc.spi.ConnectionFactoryOptions;
 
 @Configuration
 @EnableR2dbcRepositories
-class DatabaseConfiguration extends AbstractR2dbcConfiguration {
+//(basePackages = "com.cerner.devcon.hic.dao")
+class DatabaseConfiguration { // extends AbstractR2dbcConfiguration
 
 	@Value("${spring.data.mssql.host}")
 	private String host;
@@ -30,14 +31,13 @@ class DatabaseConfiguration extends AbstractR2dbcConfiguration {
 	@Value("${spring.data.mssql.password}")
 	private String password;
 
-	@Override
-	public ConnectionFactory connectionFactory() {
-		
-
-		return ConnectionFactories.get("r2dbc:mssql://localhost:1433/devcon21");
-				/*new 
-				MssqlConnectionFactory(MssqlConnectionConfiguration.builder().
-				host(host).port(port)
-				.database(database).username(username).password(password).build());*/
-	}
+	/*
+	 * @Override public ConnectionFactory connectionFactory() {
+	 * 
+	 * 
+	 * return ConnectionFactories.get("r2dbc:mssql://localhost:1433/devcon21"); new
+	 * MssqlConnectionFactory(MssqlConnectionConfiguration.builder().
+	 * host(host).port(port)
+	 * .database(database).username(username).password(password).build()); }
+	 */
 }
