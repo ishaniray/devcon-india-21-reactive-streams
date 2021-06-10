@@ -1,11 +1,9 @@
 package com.cerner.devcon.hic.models;
 
-import java.io.Serializable;
-
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,33 +12,31 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Rating implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Rating {
 
 	@Id
 	private Integer id;
 
-	@JsonProperty(index = 2)
-	private int orderId;
+	@Column("OrderId")
+	private Integer orderId;
 
-	@JsonProperty(index = 3)
-	private int custId;
+	@Column("CustId")
+	private Integer custId;
 
-	@JsonProperty(index = 4)
-	private int restaurantId;
+	@Column("RestaurantId")
+	private Integer restaurantId;
 
-	@JsonProperty(index = 5)
-	private int deliveryAgentId;
+	@Column("DeliveryAgentId")
+	private Integer deliveryAgentId;
 
-	@JsonProperty(index = 6)
-	private int foodRating;
+	@Column("FoodRating")
+	private Integer foodRating;
 
-	@JsonProperty(index = 7)
-	private int deliveryRating;
+	@Column("DeliveryRating")
+	private Integer deliveryRating;
 
-	@JsonProperty(index = 8)
+	@Column("CrawlInd")
 	private String crawlInd;
-
 }

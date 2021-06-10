@@ -1,6 +1,6 @@
 USE [devcon21]
 CREATE TABLE Ratings (
-    Id int IDENTITY(1000,1) PRIMARY KEY,
+    Id int IDENTITY(1000, 1) PRIMARY KEY,
 	OrderId int,
 	CustId int,
 	RestaurantId int,
