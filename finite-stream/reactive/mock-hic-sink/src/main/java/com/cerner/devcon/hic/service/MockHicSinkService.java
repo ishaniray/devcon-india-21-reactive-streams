@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.cerner.devcon.hic.constants.CrawlInd;
-import com.cerner.devcon.hic.dao.RatingRepository;
+import com.cerner.devcon.hic.dao.RatingDAO;
 import com.cerner.devcon.hic.models.Rating;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ public class MockHicSinkService {
 	private ObjectMapper objectMapper;
 
 	@Autowired
-	private RatingRepository ratingRepository;
+	private RatingDAO ratingRepository;
 
 	@RabbitListener(queues = "${application.rabbit.queue}", concurrency = "3")
 	public void sendFlux(String id) throws JsonProcessingException {
@@ -32,7 +32,7 @@ public class MockHicSinkService {
 
 		Flux<Rating> test = ratingRepository.findByCrawlInd(CrawlInd.NOT_STARTED.getIndicator());
 
-		test.doOnNext(r -> System.out.println(r.toString())).subscribe();
+		test.doOnNext(r -> LOGGER.info(r.toString())).subscribe();
 
 		/*
 		 * Mono<String> jsonPayload =

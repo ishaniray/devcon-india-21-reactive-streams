@@ -9,7 +9,7 @@ import com.cerner.devcon.hic.models.Rating;
 import reactor.core.publisher.Flux;
 
 @Repository
-public interface RatingRepository extends R2dbcRepository<Rating, Integer> {
+public interface RatingDAO extends R2dbcRepository<Rating, Integer> {
 
 	@Query("SELECT * FROM Ratings WHERE CrawlInd = @indicator")
 	Flux<Rating> findByCrawlInd(String indicator);
