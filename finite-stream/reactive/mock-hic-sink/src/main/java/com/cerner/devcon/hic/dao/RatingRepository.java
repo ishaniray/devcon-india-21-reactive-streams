@@ -11,6 +11,6 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface RatingRepository extends ReactiveCrudRepository<Rating, Integer> {
 
-	@Query("SELECT * FROM Ratings WHERE CrawlInd = :indicator")
-	Flux<Rating> findByCrawlInd(String indicator);
+	@Query("SELECT * FROM Ratings WHERE OrderId BETWEEN :min AND :max")
+	Flux<Rating> findByOrderIdRange(int min, int max);
 }

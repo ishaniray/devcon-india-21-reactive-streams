@@ -32,7 +32,4 @@ public class Rating {
 
 	@Column("DeliveryRating")
 	private Integer deliveryRating;
-
-	@Column("CrawlInd")
-	private String crawlInd;
 }

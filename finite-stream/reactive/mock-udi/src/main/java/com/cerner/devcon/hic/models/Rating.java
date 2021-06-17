@@ -20,6 +20,4 @@ public class Rating {
 	private Integer foodRating;
 
 	private Integer deliveryRating;
-
-	private String crawlInd;
 }
