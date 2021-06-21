@@ -2,6 +2,7 @@ package com.cerner.devcon.udi.controller;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,9 @@ public class MockUdiNonReactiveController {
 
 	@PostMapping(path = "/consume")
 	@ResponseStatus(code = HttpStatus.OK)
-	public String consumePayload(@RequestBody List<Rating> ratings) {
+	public String consumePayload(@RequestBody List<Rating> ratings) throws InterruptedException {
 		ratings.stream().map(Rating::toString).forEach(LOGGER::info);
+		TimeUnit.MILLISECONDS.sleep(2500);
 		return "Received at: " + ZonedDateTime.now().toString();
 	}
 }
