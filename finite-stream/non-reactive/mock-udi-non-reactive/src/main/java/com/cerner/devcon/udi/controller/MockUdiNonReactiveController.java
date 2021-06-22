@@ -24,6 +24,6 @@ public class MockUdiNonReactiveController {
 	public String consumePayload(@RequestBody List<Rating> ratings) throws InterruptedException {
 		ratings.stream().map(Rating::toString).forEach(LOGGER::info);
 		TimeUnit.MILLISECONDS.sleep(2500);
-		return "Received at: " + ZonedDateTime.now().toString();
+		return "Received items at: " + ZonedDateTime.now().toString();
 	}
 }

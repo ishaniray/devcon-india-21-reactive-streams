@@ -1,5 +1,7 @@
 package com.cerner.devcon.hic.service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +90,8 @@ public class MockHicSinkService {
 	@RabbitListener(queues = "${application.rabbit.queue}", concurrency = "3")
 	public void sendList(Map<String, Integer> batchMinMax) {
 
+		Instant start = Instant.now();
+
 		LOGGER.info("Received from queue: {}", batchMinMax);
 
 		List<Rating> newRows = ratingDao.findByOrderIdRange(batchMinMax.get("min"), batchMinMax.get("max"));
@@ -96,5 +100,10 @@ public class MockHicSinkService {
 		ResponseEntity<String> response = restTemplate.exchange(REST_ENDPOINT, HttpMethod.POST, payload, String.class);
 
 		LOGGER.info("Response received from UDI: [{}], {}", response.getStatusCodeValue(), response.getBody());
+
+		Instant end = Instant.now();
+		Duration timeElapsed = Duration.between(start, end);
+
+		LOGGER.info("Processing time = {} ms", timeElapsed.toMillis());
 	}
 }

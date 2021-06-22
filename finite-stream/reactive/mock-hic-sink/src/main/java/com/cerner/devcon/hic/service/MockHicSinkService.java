@@ -1,5 +1,7 @@
 package com.cerner.devcon.hic.service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.cerner.devcon.hic.dao.RatingRepository;
@@ -47,7 +50,7 @@ public class MockHicSinkService {
 		this.rabbitTemplate = rabbitTemplate;
 	}
 
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 60000)
 	public void insertRowsIntoDbAndPublishMsg() {
 
 		int counter = 0;
@@ -83,14 +86,23 @@ public class MockHicSinkService {
 	@RabbitListener(queues = "${application.rabbit.queue}", concurrency = "3")
 	public void sendFlux(Map<String, Integer> batchMinMax) {
 
+		Instant start = Instant.now();
+
 		LOGGER.info("Received from queue: {}", batchMinMax);
 
 		Flux<Rating> newRowsWithBackpressureBuffer = ratingRepository
-				.findByOrderIdRange(batchMinMax.get("min"), batchMinMax.get("max")).onBackpressureBuffer();
+				.findByOrderIdRange(batchMinMax.get("min"), batchMinMax.get("max"))
+				.delayElements(Duration.ofMillis(500));
 
 		Mono<String> udiResponse = WebClient.create("http://localhost:7071").method(HttpMethod.POST).uri("/consume")
-				.body(newRowsWithBackpressureBuffer, Rating.class).retrieve().bodyToMono(String.class);
+				.body(BodyInserters.fromPublisher(newRowsWithBackpressureBuffer, Rating.class)).retrieve()
+				.bodyToMono(String.class);
 
-		udiResponse.doOnNext(LOGGER::info).subscribe();
+		udiResponse.doOnNext(response -> LOGGER.info("Response from UDI: {}", response)).subscribe();
+
+		Instant end = Instant.now();
+		Duration timeElapsed = Duration.between(start, end);
+
+		LOGGER.info("Processing time = {} ms", timeElapsed.toMillis());
 	}
 }
