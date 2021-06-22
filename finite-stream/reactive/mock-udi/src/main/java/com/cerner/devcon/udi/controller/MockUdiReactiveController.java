@@ -1,5 +1,6 @@
 package com.cerner.devcon.udi.controller;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class MockUdiReactiveController {
 	@PostMapping("/consume")
 	public Mono<String> consumePayload(@RequestBody Flux<Rating> ratings) {
 		return ratings.doOnNext(rating -> LOGGER.info(rating.toString()))
-				.then(Mono.just("Received flux at: " + ZonedDateTime.now().toString()));
+				.then(Mono.just("Received flux at: " + ZonedDateTime.now().toString()))
+				.delayElement(Duration.ofSeconds(5));
 	}
 }

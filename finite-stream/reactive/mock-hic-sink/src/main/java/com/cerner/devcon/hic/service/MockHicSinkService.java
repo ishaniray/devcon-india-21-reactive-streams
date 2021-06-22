@@ -90,9 +90,8 @@ public class MockHicSinkService {
 
 		LOGGER.info("Received from queue: {}", batchMinMax);
 
-		Flux<Rating> newRowsWithBackpressureBuffer = ratingRepository
-				.findByOrderIdRange(batchMinMax.get("min"), batchMinMax.get("max"))
-				.delayElements(Duration.ofMillis(500));
+		Flux<Rating> newRowsWithBackpressureBuffer = ratingRepository.findByOrderIdRange(batchMinMax.get("min"),
+				batchMinMax.get("max"));
 
 		Mono<String> udiResponse = WebClient.create("http://localhost:7071").method(HttpMethod.POST).uri("/consume")
 				.body(BodyInserters.fromPublisher(newRowsWithBackpressureBuffer, Rating.class)).retrieve()
