@@ -104,6 +104,6 @@ public class MockHicSinkService {
 		Instant end = Instant.now();
 		Duration timeElapsed = Duration.between(start, end);
 
-		LOGGER.info("Processing time = {} ms", timeElapsed.toMillis());
+		LOGGER.info("Time spent by thread within sendList() = {} ms", timeElapsed.toMillis());
 	}
 }
